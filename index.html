@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Portal Freelancer Almeria</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: entrada com dois papéis (gerente / RH); app com barra superior, abas e cartões de lançamento (campos à esquerda, termo à direita) */
+:root{
+  --bg:#f3f5f4; --surface:#ffffff; --ink:#15211d; --muted:#5b6b65; --line:#d6dedb;
+  --accent:#0f6b55; --accent-ink:#ffffff; --accent-soft:#e1efe9;
+  --warn:#9a5b00; --warn-soft:#fbefd9; --crit:#a5262b; --crit-soft:#f8e1e1; --ok:#1d7a3e; --ok-soft:#e0f2e6;
+  --f-body:"Archivo",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1513; --surface:#17201d; --ink:#e4ece9; --muted:#97a8a1; --line:#2a3632;
+  --accent:#4cc3a0; --accent-ink:#06261d; --accent-soft:#183a30;
+  --warn:#f0b450; --warn-soft:#3a2c12; --crit:#f08a8d; --crit-soft:#3d1c1e; --ok:#6fd394; --ok-soft:#173523; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --surface:#17201d; --ink:#e4ece9; --muted:#97a8a1; --line:#2a3632;
+  --accent:#4cc3a0; --accent-ink:#06261d; --accent-soft:#183a30;
+  --warn:#f0b450; --warn-soft:#3a2c12; --crit:#f08a8d; --crit-soft:#3d1c1e; --ok:#6fd394; --ok-soft:#173523; color-scheme:dark}
+*{box-sizing:border-box} [hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 64px;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-size:1.5rem;letter-spacing:-.01em} h2{font-size:1.15rem} h3{font-size:1.05rem}
+.eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)} .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+button{font:inherit;font-size:.9rem;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:9px 13px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.danger{color:var(--crit)}
+button.small{padding:6px 9px;font-size:.78rem}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{font:inherit;font-size:.92rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:60px}
+input.flag,select.flag{border-color:var(--crit);background:var(--crit-soft)}
+label.lbl{font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:3px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+/* topo */
+.topbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:12px}
+.who{display:flex;gap:10px;align-items:center;font-size:.88rem}
+.badge{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.demo-band{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:8px 12px;font-size:.85rem}
+/* entrada */
+.entry-screen{max-width:760px;margin:6vh auto 0;display:flex;flex-direction:column;gap:22px}
+.roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:560px){.roles{grid-template-columns:minmax(0,1fr)}}
+.role{padding:22px;text-align:left;display:flex;flex-direction:column;gap:6px;border-radius:12px}
+.role b{font-size:1.25rem}
+.role span{font-weight:400;color:var(--muted);font-size:.9rem}
+.role[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.login{padding:18px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+@media (max-width:560px){.login{grid-template-columns:minmax(0,1fr)}}
+/* abas */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabs.sub button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.count{font-family:var(--f-mono);font-weight:500;margin-left:4px}
+/* formulário */
+.form{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+@media (max-width:900px){.form{grid-template-columns:minmax(0,1fr)}}
+.form-main{padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:9px 16px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.drops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.drop{border:2px dashed var(--line);border-radius:10px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;text-align:center;cursor:pointer;position:relative;overflow:hidden;background:var(--bg)}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop.has{border-style:solid;padding:0;min-height:0;aspect-ratio:3/4}
+.drop img{width:100%;height:100%;object-fit:cover;object-position:top}
+.drop .x{position:absolute;top:6px;right:6px}
+.drop small{color:var(--muted);font-size:.8rem}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}
+@media (max-width:560px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.full{grid-column:1/-1}
+.side-panel{padding:16px;display:flex;flex-direction:column;gap:12px;position:sticky;top:calc(12px + env(safe-area-inset-top,0px))}
+.alerts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.alerts li{font-size:.86rem;padding:7px 10px;border-radius:6px;display:flex;gap:8px;align-items:flex-start}
+.alerts li::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;margin-top:6px;background:currentColor}
+.alerts .crit{background:var(--crit-soft);color:var(--crit)} .alerts .warn{background:var(--warn-soft);color:var(--warn)} .alerts .info{background:var(--accent-soft);color:var(--accent)} .alerts .okk{background:var(--ok-soft);color:var(--ok)}
+.alerts li span{color:var(--ink)}
+/* lista */
+.lanc{display:grid;grid-template-columns:minmax(0,1fr) 260px;overflow:hidden;border-left:5px solid var(--ok)}
+.lanc.sev-warn{border-left-color:var(--warn)} .lanc.sev-crit{border-left-color:var(--crit)}
+@media (max-width:860px){.lanc{grid-template-columns:minmax(0,1fr)}}
+.lanc-main{padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.lanc-side{background:var(--bg);border-left:1px solid var(--line);padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+@media (max-width:860px){.lanc-side{border-left:0;border-top:1px solid var(--line)}}
+.thumb{padding:0;aspect-ratio:3/4;overflow:hidden;border-radius:6px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--muted);max-width:100%}
+.thumb img{width:100%;height:100%;object-fit:cover;object-position:top}
+.head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;justify-content:space-between}
+.pill{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.pill.teste{background:var(--warn-soft);color:var(--warn)}
+.st{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+.st-ENVIADO{background:var(--warn-soft);color:var(--warn)} .st-PROGRAMADO{background:var(--accent-soft);color:var(--accent)} .st-PAGO{background:var(--ok-soft);color:var(--ok)} .st-DEVOLVIDO{background:var(--crit-soft);color:var(--crit)}
+.val{font-family:var(--f-mono);font-size:1.1rem;font-weight:500;font-variant-numeric:tabular-nums}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px}
+@media (max-width:560px){.fields{grid-template-columns:minmax(0,1fr)}}
+.fld{display:flex;flex-direction:column;gap:3px;min-width:0}
+.fld .in{display:flex;gap:6px;min-width:0}
+.fld input,.fld textarea{font-family:var(--f-mono);font-size:.86rem}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end}
+.toolbar .fld{width:170px}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.summary>div{background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.summary b{font-family:var(--f-mono);font-size:1.1rem;font-weight:500}
+@media (max-width:640px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+pre.recap{margin:0;font-family:var(--f-mono);font-size:.82rem;white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;max-height:320px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tbl{overflow-x:auto}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:26px;text-align:center;color:var(--muted)}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:50;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lightbox img{max-height:100%;max-width:100%;border-radius:6px;background:#fff}
+.lightbox button{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px))}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.9rem;z-index:60;max-width:90vw}
+.busy{position:fixed;inset:0;background:color-mix(in srgb,var(--bg) 60%,transparent);display:flex;align-items:center;justify-content:center;z-index:55;font-weight:600}
+pre.sel{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="lightbox" id="lb" hidden><img id="lbImg" alt="Termo ampliado"><button type="button" id="lbClose">Fechar</button></div>
+<div class="toast" id="toast" hidden></div>
+<div class="busy" id="busy" hidden><span id="busyTxt">Carregando…</span></div>
+<pre class="sel" id="sel"></pre>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+/* =========================================================================
+   CONFIGURAÇÃO: cole aqui a URL do App da Web do Apps Script (termina em /exec).
+   Vazio = modo demonstração (dados de exemplo, salvos só neste navegador).
+   ========================================================================= */
+const API_URL = "https://script.google.com/macros/s/AKfycbyzIKGpBh81K1kuzVVzY4DfQ-AaLz70XSktq5k1R0q34u0z76B2SCJliSrQXYstzw8QsQ/exec";
+
+/* ======================= UTIL ======================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const brl = n => "R$ " + Number(n||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const br = iso => iso ? String(iso).slice(0,10).split("-").reverse().join("/") : "";
+const dm = iso => iso ? iso.slice(8,10)+"/"+iso.slice(5,7) : "";
+const isoHoje = (n=0) => { const d=new Date(); d.setDate(d.getDate()+n); return d.toLocaleDateString("sv-SE"); };
+const num = v => typeof v==="number" ? v : Number(String(v??"").replace(/[^\d,.-]/g,"").replace(/\.(?=\d{3}(\D|$))/g,"").replace(",","."))||0;
+const digits = s => String(s||"").replace(/\D/g,"");
+const isTeste = l => String(l.plano).toLowerCase().startsWith("teste");
+function cpfOk(c){const d=digits(c);if(d.length!==11||/^(\d)\1+$/.test(d))return false;const f=n=>{let s=0;for(let i=0;i<n;i++)s+=+d[i]*(n+1-i);return(s*10%11)%10};return f(9)===+d[9]&&f(10)===+d[10]}
+const fmtCpf = c => { const d=digits(c); return d.length===11 ? d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,"$1.$2.$3-$4") : c; };
+function tipoChave(k){k=String(k||"").trim();if(!k)return"";
+  if(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(k))return"ALEATORIA";
+  if(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(k))return"EMAIL";
+  const d=digits(k); if(d.length===11&&cpfOk(d))return"CPF"; if(d.length===14)return"CNPJ";
+  if(d.length===10||d.length===11||(d.length===13&&d.startsWith("55")))return"CELULAR"; return"";}
+const FORMAS={CPF:"PIX CPF",CELULAR:"PIX CELULAR",EMAIL:"PIX EMAIL",ALEATORIA:"PIX ALEATORIO",CNPJ:"PIX CNPJ"};
+function fmtChave(k,t){const d=digits(k);if(t==="CPF")return fmtCpf(d);if(t==="CELULAR"){const x=d.length===13?d.slice(2):d;return x.length===11?`(${x.slice(0,2)}) ${x.slice(2,7)}-${x.slice(7)}`:`(${x.slice(0,2)}) ${x.slice(2,6)}-${x.slice(6)}`}return String(k).trim()}
+function weekStart(iso){const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toLocaleDateString("sv-SE")}
+function addDays(iso,n){const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+n);return d.toLocaleDateString("sv-SE")}
+function datasDe(l){const out=[];if(!l.dataInicio)return out;let d=l.dataInicio;const f=l.dataFim||l.dataInicio;let g=0;while(d<=f&&g++<40){out.push(d);d=addDays(d,1)}return out}
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,3200)}
+function busy(on,txt){$("#busy").hidden=!on;if(txt)$("#busyTxt").textContent=txt}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast("Copiado")}catch(e){const p=$("#sel");p.textContent=text;const r=document.createRange();r.selectNodeContents(p);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand("copy");toast("Copiado")}catch(_){toast("Texto selecionado: use Ctrl+C")}}}
+let dlCap=null; (async()=>{try{dlCap=await window.claude?.use?.("downloads")}catch(e){}})();
+async function baixar(nome,data,mime){
+  if(dlCap){try{await dlCap.save({filename:nome,data});toast("Arquivo salvo")}catch(e){toast(e?.code==="declined"?"Download cancelado":"Não foi possível baixar")}return}
+  const blob=data instanceof Blob?data:new Blob([data],{type:mime||"text/plain;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=nome;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);
+}
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||"null");localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+async function comprimir(file){
+  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(file)});
+  const max=1700,sc=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement("canvas");
+  c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+  const url=c.toDataURL("image/jpeg",0.82);return{mime:"image/jpeg",data:url.split(",")[1],url};
+}
+
+/* ======================= API ======================= */
+const S={token:null,user:null,config:null,itens:[],semanas:{},papelEscolhido:null,view:null,unidade:null,venc:null,fotos:{}};
+const GAS=typeof google!=="undefined"&&google.script&&google.script.run; // aberto pelo link do Apps Script
+const DEMO=!API_URL&&!GAS;
+async function api(action,payload={}){
+  if(DEMO)return demoApi(action,payload);
+  const body=JSON.stringify({action,token:S.token,...payload});
+  const j=GAS?JSON.parse(await new Promise((res,rej)=>google.script.run.withSuccessHandler(res).withFailureHandler(e=>rej(new Error(e.message||e))).api(body)))
+            :await (await fetch(API_URL,{method:"POST",body})).json();
+  if(j.erro==="sessao"){toast(j.msg);sair();throw new Error(j.msg)}
+  return j;
+}
+
+/* ---------- modo demonstração (dados fictícios) ---------- */
+function demoDb(){
+  let db=store("pf-demo");if(db)return db;
+  const h=isoHoje(),y=n=>isoHoje(n);
+  db={itens:[
+    {id:"D1",criadoEm:y(-3)+" 10:12",criadoPor:"gerente.demo",unidade:"BEIRA LAGO",plano:"Freelancer",nome:"ANA PAULA EXEMPLO",cpf:"529.982.247-25",cargo:"ASG",dataInicio:y(-4),dataFim:y(-4),dias:1,horas:8,valor:160,vt:"",forma:"PIX CELULAR",chave:"(61) 99999-0001",fotos:"demo1,demo2",alertas:"",justificativa:"",status:"ENVIADO",emissao:"",vencimento:"",conta:"BEIRALAGO BB"},
+    {id:"D2",criadoEm:y(-2)+" 18:40",criadoPor:"gerente.demo",unidade:"BEIRA LAGO",plano:"Freelancer",nome:"ANA PAULA EXEMPLO",cpf:"529.982.247-25",cargo:"ASG",dataInicio:y(-2),dataFim:y(-2),dias:1,horas:6,valor:130,vt:"",forma:"PIX CELULAR",chave:"(61) 99999-0001",fotos:"demo1,demo2",status:"ENVIADO",emissao:"",vencimento:"",conta:"BEIRALAGO BB"},
+    {id:"D3",criadoEm:y(-2)+" 19:05",criadoPor:"gerente.demo",unidade:"BEIRA LAGO",plano:"Teste de funcionário",nome:"BRUNO TESTE MODELO",cpf:"111.444.777-35",cargo:"Auxiliar de Cozinha",dataInicio:y(-5),dataFim:y(-3),dias:3,horas:"",valor:183,vt:33,forma:"PIX CPF",chave:"111.444.777-35",fotos:"demo1,demo2",status:"ENVIADO",emissao:"",vencimento:"",conta:"BEIRALAGO BB"},
+    {id:"D4",criadoEm:y(-9)+" 11:00",criadoPor:"gerente.demo",unidade:"BEIRA LAGO",plano:"Freelancer",nome:"CARLA DEMONSTRA SILVA",cpf:"390.533.447-05",cargo:"Garçom",dataInicio:y(-10),dataFim:y(-10),dias:1,horas:12,valor:220,vt:"",forma:"PIX ALEATORIO",chave:"0cb05864-e67b-4eff-8676-273f7902a787",fotos:"demo1,demo2",status:"PROGRAMADO",emissao:y(-8),vencimento:y(-7),conta:"BEIRALAGO BB"},
+    {id:"D5",criadoEm:y(-9)+" 11:10",criadoPor:"gerente.demo",unidade:"BEIRA LAGO",plano:"Freelancer",nome:"DIEGO FICTICIO SOUZA",cpf:"153.509.460-56",cargo:"Cumim",dataInicio:y(-10),dataFim:y(-10),dias:1,horas:6,valor:130,vt:"",forma:"PIX CPF",chave:"153.509.460-56",fotos:"demo1,demo2",status:"PAGO",emissao:y(-8),vencimento:y(-7),conta:"BEIRALAGO BB"},
+    {id:"D6",criadoEm:y(-1)+" 09:00",criadoPor:"rh.demo",unidade:"CPD",plano:"Freelancer",nome:"ELISA MODELO RAMOS",cpf:"714.602.380-01",cargo:"Auxiliar de Confeitaria",dataInicio:y(-1),dataFim:y(-1),dias:1,horas:8,valor:160,vt:"",forma:"PIX CPF",chave:"714.602.380-01",fotos:"demo1,demo2",status:"ENVIADO",emissao:"",vencimento:"",conta:"ALMERIA MATRIZ"}
+  ]};
+  store("pf-demo",db);return db;
+}
+function demoImg(n){const c=document.createElement("canvas");c.width=300;c.height=400;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,300,400);g.fillStyle="#222";g.font="bold 15px sans-serif";g.fillText("TERMO DE EXEMPLO",70,40);g.font="12px sans-serif";g.fillText("Página "+n+" (demonstração)",85,62);g.strokeStyle="#bbb";for(let i=0;i<14;i++){g.beginPath();g.moveTo(30,95+i*20);g.lineTo(270,95+i*20);g.stroke()}g.strokeStyle="#2b4aa8";g.lineWidth=2;g.beginPath();g.moveTo(40,110);g.bezierCurveTo(80,90,120,130,170,105);g.stroke();return c.toDataURL("image/jpeg",.8)}
+const DEMO_CFG={contas:{"BEIRA LAGO":"BEIRALAGO BB","CPD":"ALMERIA MATRIZ","CSC":"A DEFINIR"},jornadas:{"6":130,"8":160,"12":220},limite:3,unidades:["BEIRA LAGO","CPD","CSC"],ia:true};
+function mapaSemanas(itens){const m={};itens.filter(o=>!isTeste(o)&&!["EXCLUIDO","DEVOLVIDO"].includes(o.status)).forEach(o=>{const c=digits(o.cpf);datasDe(o).forEach(dt=>{const k=c+"|"+weekStart(dt);(m[k]=m[k]||[]);if(!m[k].includes(dt))m[k].push(dt)})});return m}
+async function demoApi(a,p){
+  await new Promise(r=>setTimeout(r,250));
+  const db=demoDb(),save=()=>store("pf-demo",db),u=S.user;
+  if(a==="login"){const papel=p.papel||"gerente";const user=papel==="rh"?{usuario:"rh.demo",nome:"RH (demonstração)",papel:"rh",unidade:"TODAS"}:{usuario:"gerente.demo",nome:"Gerente Beira Lago (demonstração)",papel:"gerente",unidade:"BEIRA LAGO"};return{ok:true,token:"demo",user,config:DEMO_CFG}}
+  if(a==="listar"){let it=db.itens.filter(o=>o.status!=="EXCLUIDO");if(u.papel!=="rh")it=it.filter(o=>o.unidade===u.unidade);return{ok:true,itens:it,semanas:mapaSemanas(db.itens)}}
+  if(a==="salvar"){const l=p.lanc;const id="D"+Date.now();const fotos=(p.fotos||[]).map((f,i)=>{const k="f"+id+i;try{sessionStorage.setItem(k,"data:image/jpeg;base64,"+f.data)}catch(e){}return k});db.itens.push({...l,id,criadoEm:new Date().toLocaleString("sv-SE").slice(0,16),criadoPor:u.usuario,nome:l.nome.toUpperCase(),fotos:fotos.join(","),status:"ENVIADO",emissao:"",vencimento:"",conta:DEMO_CFG.contas[l.unidade]});save();return{ok:true,id}}
+  const find=id=>db.itens.find(o=>o.id===id);
+  if(a==="editar"){const o=find(p.id);Object.assign(o,p.campos);if(p.campos.nome)o.nome=p.campos.nome.toUpperCase();save();return{ok:true}}
+  if(a==="programar"){p.ids.forEach(id=>{const o=find(id);o.status="PROGRAMADO";o.emissao=p.emissao;o.vencimento=p.vencimento});save();return{ok:true}}
+  if(a==="marcarPago"){p.ids.forEach(id=>find(id).status="PAGO");save();return{ok:true}}
+  if(a==="voltarEnviado"){p.ids.forEach(id=>{const o=find(id);o.status="ENVIADO";o.vencimento="";o.emissao=""});save();return{ok:true}}
+  if(a==="devolver"){const o=find(p.id);o.status="DEVOLVIDO";o.obsRH=p.motivo;save();return{ok:true}}
+  if(a==="excluir"){find(p.id).status="EXCLUIDO";save();return{ok:true}}
+  if(a==="foto"){if(p.fileId.startsWith("demo"))return{ok:true,mime:"image/jpeg",data:demoImg(p.fileId.slice(-1)).split(",")[1],nome:p.fileId+".jpg"};let d=null;try{d=sessionStorage.getItem(p.fileId)}catch(e){}return d?{ok:true,mime:"image/jpeg",data:d.split(",")[1],nome:p.fileId+".jpg"}:{ok:true,mime:"image/jpeg",data:demoImg(1).split(",")[1]}}
+  if(a==="diasSemana"){const m=mapaSemanas(db.itens.filter(o=>o.id!==p.ignorarId));const out={};(p.datas||[]).forEach(dt=>{const w=weekStart(dt);out[w]=(m[digits(p.cpf)+"|"+w]||[]).slice()});return{ok:true,dias:out}}
+  if(a==="lerTermo"){return{ok:true,dados:{plano:p.plano||"Freelancer",nome:"MARIA EXEMPLO",cpf:null,cargo:"ASG",dataInicio:isoHoje(-1),dataFim:null,dias:1,horas:8,valor:160,vt:null,chave:"61 98888-7777",ilegivel:["nome","cpf"],observacoes:["Demonstração: nome e CPF vieram como ilegíveis de propósito."]}}}
+  return{ok:false,msg:"ação demo desconhecida"};
+}
+
+/* ======================= ENTRADA / LOGIN ======================= */
+function telaEntrada(){
+  const demo=DEMO;
+  $("#app").innerHTML=`<div class="entry-screen">
+    <div><div class="eyebrow">Grupo Almeria · Departamento Pessoal</div><h1>Portal Freelancer</h1>
+    <p class="muted" style="margin:6px 0 0">O gerente envia o termo do freelancer ou do teste. O RH confere, programa o pagamento e copia o lançamento para o financeiro.</p></div>
+    ${demo?`<div class="demo-band">Modo demonstração: dados fictícios, salvos só neste navegador. Para usar de verdade, configure a planilha e cole a URL no código (veja o guia).</div>`:""}
+    <div class="roles">
+      <button type="button" class="role card" data-role="gerente" aria-pressed="${S.papelEscolhido==="gerente"}"><b>Sou gerente</b><span>Enviar fotos dos termos e acompanhar o que já foi programado para pagamento.</span></button>
+      <button type="button" class="role card" data-role="rh" aria-pressed="${S.papelEscolhido==="rh"}"><b>Sou RH</b><span>Conferir os termos, definir a data de pagamento e lançar no financeiro.</span></button>
+    </div>
+    <form class="login card" id="loginForm" ${S.papelEscolhido?"":"hidden"}>
+      <div><label class="lbl" for="lgUser">Usuário</label><input id="lgUser" autocomplete="username" ${demo?'value="demo"':""}></div>
+      <div><label class="lbl" for="lgPass">Senha</label><input id="lgPass" type="password" autocomplete="current-password" ${demo?'value="demo"':""}></div>
+      <button class="primary" type="submit">Entrar</button>
+    </form>
+  </div>`;
+}
+async function entrar(e){
+  e.preventDefault();busy(true,"Entrando…");
+  try{const r=await api("login",{usuario:$("#lgUser").value,senha:$("#lgPass").value,papel:S.papelEscolhido});
+    if(!r.ok){toast(r.msg);return}
+    if(S.papelEscolhido==="rh"&&r.user.papel!=="rh"){toast("Este usuário é de gerente. Entre em “Sou gerente”.");return}
+    S.token=r.token;S.user=r.user;S.config=r.config;store("pf-sess",{token:S.token,user:S.user,config:S.config,t:Date.now()});
+    S.view=r.user.papel==="rh"?"programar":"novo";S.unidade=r.user.papel==="rh"?"BEIRA LAGO":r.user.unidade;
+    await carregar();
+  }catch(err){toast("Falha ao conectar: "+err.message)}finally{busy(false)}
+}
+function sair(){S.token=null;S.user=null;store("pf-sess",{});telaEntrada()}
+async function carregar(){busy(true,"Carregando lançamentos…");try{const r=await api("listar");if(r.ok){S.itens=r.itens;S.semanas=r.semanas||{}}else toast(r.msg)}finally{busy(false)}render()}
+
+/* ======================= SHELL ======================= */
+function render(){
+  const u=S.user,rh=u.papel==="rh";
+  const views=rh?[["programar","A programar"],["vencimentos","Vencimentos"],["novo","Novo lançamento"],["todos","Todos"]]:[["novo","Novo lançamento"],["historico","Histórico"]];
+  const uni=rh?S.config.unidades:[u.unidade];
+  const pend=un=>S.itens.filter(o=>o.unidade===un&&o.status==="ENVIADO").length;
+  $("#app").innerHTML=`
+    <div class="topbar"><div><div class="eyebrow">Portal Freelancer · ${rh?"RH":"Gerência "+esc(u.unidade)}</div><h1>${rh?"Lançamentos para pagamento":"Freelancer e teste"}</h1></div>
+      <div class="who"><span class="badge">${rh?"RH":"Gerente"}</span><span>${esc(u.nome)}</span><button type="button" class="small" id="btnReload">Atualizar</button><button type="button" class="small" id="btnSair">Sair</button></div></div>
+    ${DEMO?`<div class="demo-band">Modo demonstração: dados fictícios.</div>`:""}
+    ${rh?`<nav class="tabs" aria-label="Unidade">${uni.map(x=>`<button type="button" data-uni="${x}" aria-selected="${x===S.unidade}">${x}${pend(x)?`<span class="count">· ${pend(x)} novo${pend(x)>1?"s":""}</span>`:""}</button>`).join("")}</nav>`:""}
+    <nav class="tabs sub" aria-label="Seções">${views.map(([k,t])=>`<button type="button" data-view="${k}" aria-selected="${k===S.view}">${t}${k==="programar"?`<span class="count">(${pend(S.unidade)})</span>`:""}</button>`).join("")}</nav>
+    <section id="view"></section>`;
+  ({novo:viewNovo,historico:viewHistorico,programar:viewProgramar,vencimentos:viewVencimentos,todos:viewTodos})[S.view]();
+}
+
+/* ======================= ALERTAS ======================= */
+function diasNaSemana(l,extra){ // datas de freelancer da pessoa na(s) semana(s) do lançamento, incluindo o próprio
+  const out={};if(isTeste(l))return out;const c=digits(l.cpf);
+  datasDe(l).forEach(dt=>{const w=weekStart(dt);const base=(extra&&extra[w])||S.semanas[c+"|"+w]||[];out[w]=[...new Set([...base,...datasDe(l).filter(x=>weekStart(x)===w)])].sort()});
+  return out;
+}
+function alertasDe(l,{extra,ilegiveis=[],tocados={},fotos=null}={}){
+  const A=[],lim=S.config.limite||3,jt=S.config.jornadas||{};
+  if(fotos!==null&&fotos<2)A.push(["crit","Anexe as 2 páginas do termo (dados pessoais e a página do valor/PIX)."]);
+  const ileg=k=>ilegiveis.includes(k)&&!tocados[k];
+  const nomeP=String(l.nome||"").trim().split(/\s+/).filter(Boolean);
+  if(ileg("nome"))A.push(["crit","Nome ilegível na foto. Digite o nome completo."]);
+  else if(nomeP.length<2)A.push(["crit","Digite o nome completo (nome e sobrenome)."]);
+  if(ileg("cpf"))A.push(["crit","CPF ilegível na foto. Digite o CPF."]);
+  else if(!l.cpf)A.push(["crit","Falta o CPF."]);
+  else if(!cpfOk(l.cpf))A.push(["crit","CPF inválido: confira os números."]);
+  if(!l.cargo)A.push(["warn","Informe a função (ASG, cumim, garçom…)."]);
+  if(!l.dataInicio)A.push(["crit",isTeste(l)?"Informe o período do teste.":"Informe a data do serviço."]);
+  else{
+    if(l.dataInicio>isoHoje())A.push(["crit","A data do serviço está no futuro."]);
+    if(l.dataFim&&l.dataFim<l.dataInicio)A.push(["crit","A data final é antes da inicial."]);
+    const dias=(new Date(isoHoje())-new Date(l.dataInicio))/864e5;if(dias>10)A.push(["warn",`Serviço de ${Math.round(dias)} dias atrás. Confira se já não foi pago.`]);
+  }
+  if(!(num(l.valor)>0))A.push(["crit","Informe o valor."]);
+  else if(!isTeste(l)&&l.horas&&jt[l.horas]&&num(l.valor)!==jt[l.horas]&&!String(l.justificativa||"").trim())A.push(["crit",`Valor diferente da tabela (${l.horas}h = ${brl(jt[l.horas])}). Escreva o motivo no campo “Justificativa”.`]);
+  if(ileg("chave"))A.push(["crit","Chave PIX ilegível na foto. Digite a chave."]);
+  else if(!l.chave)A.push(["crit","Não tem chave PIX. Peça a chave para a pessoa e digite aqui."]);
+  else{const t=tipoChave(l.chave);
+    if(!t)A.push(["crit","Chave PIX em formato inválido. Confira (CPF, celular com DDD, e-mail ou chave aleatória)."]);
+    else{ if(l.forma&&FORMAS[t]!==l.forma)A.push(["warn",`A chave digitada parece ser ${FORMAS[t].replace("PIX ","")}, mas o tipo marcado é ${l.forma.replace("PIX ","")}.`]);
+      if(t==="CPF"&&cpfOk(l.cpf)&&digits(l.chave)!==digits(l.cpf))A.push(["warn","A chave PIX é o CPF de outra pessoa. Confirme que o pagamento vai para a conta certa."]);}
+  }
+  if(l.cpf&&l.nome){const outro=(S.itens||[]).find(o=>o.id!==l.id&&digits(o.cpf)===digits(l.cpf)&&o.nome&&o.nome.toUpperCase().trim()!==String(l.nome).toUpperCase().trim());if(outro)A.push(["warn",`Este CPF já foi lançado com outro nome (${outro.nome}). Confira.`])}
+  if(isTeste(l)&&l.dataInicio){const n=datasDe(l).length;if(n>3)A.push(["warn",`Teste de ${n} dias: o padrão é até 3 dias.`])}
+  const ws=diasNaSemana(l,extra);
+  Object.entries(ws).forEach(([w,ds])=>{const per=`semana de ${dm(w)} a ${dm(addDays(w,6))}`;
+    if(ds.length>lim)A.push([String(l.justificativa||"").trim()?"warn":"crit",`Trabalhou ${ds.length} dias como freelancer na ${per} (${ds.map(dm).join(", ")}). O limite é ${lim}.${String(l.justificativa||"").trim()?"":" Escreva o motivo em “Justificativa” para enviar."}`]);
+    else if(ds.length===lim)A.push(["warn",`${ds.length} dias na ${per}: está no limite.`]);});
+  return A;
+}
+const sevDe=A=>A.some(a=>a[0]==="crit")?"crit":A.some(a=>a[0]==="warn")?"warn":"ok";
+const alertHtml=A=>A.length?`<ul class="alerts">${A.map(a=>`<li class="${a[0]}"><span>${esc(a[1])}</span></li>`).join("")}</ul>`:`<ul class="alerts"><li class="okk"><span>Sem pendências.</span></li></ul>`;
+
+/* ======================= NOVO LANÇAMENTO ======================= */
+let F=null;
+function novoForm(){return{plano:"Freelancer",unidade:S.user.papel==="rh"?S.unidade:S.user.unidade,nome:"",cpf:"",cargo:"",dataInicio:"",dataFim:"",horas:"",valor:"",vt:"",forma:"",chave:"",justificativa:"",fotos:[],ilegiveis:[],tocados:{},obsIA:[],extra:null}}
+function viewNovo(){
+  if(!F||F.unidade!==(S.user.papel==="rh"?S.unidade:S.user.unidade))F=novoForm();
+  const t=isTeste(F),jt=S.config.jornadas;
+  $("#view").innerHTML=`<div class="form">
+    <div class="form-main card">
+      <div class="row" style="justify-content:space-between"><div class="seg" role="group" aria-label="Tipo">
+        <button type="button" data-plano="Freelancer" aria-pressed="${!t}">Freelancer</button><button type="button" data-plano="Teste de funcionário" aria-pressed="${t}">Teste de funcionário</button></div>
+        <span class="muted" style="font-size:.85rem">Unidade: <b>${esc(F.unidade)}</b></span></div>
+      <div><label class="lbl">Fotos do termo</label>
+        <div class="drops">${[0,1].map(i=>dropHtml(i)).join("")}</div>
+        <input type="file" id="fileIn" accept="image/*" hidden>
+        <div class="row" style="margin-top:8px"><button type="button" class="small" id="btnMaisFoto">+ outra página</button>
+        ${F.fotos.length>2?`<span class="muted" style="font-size:.85rem">${F.fotos.length} fotos anexadas</span>`:""}</div>
+      </div>
+      ${S.config.ia?`<div class="row"><button type="button" class="primary" id="btnLer" ${F.fotos.length?"":"disabled"}>Ler termo pela foto</button><span class="muted" style="font-size:.85rem">Preenche os campos sozinho. Confira tudo antes de enviar.</span></div>`:`<p class="muted" style="margin:0;font-size:.85rem">Preencha os campos olhando a foto.</p>`}
+      ${F.obsIA.length?`<ul class="alerts">${F.obsIA.map(o=>`<li class="info"><span>Leitura: ${esc(o)}</span></li>`).join("")}</ul>`:""}
+      <div class="grid2">
+        <div class="full"><label class="lbl" for="fNome">Nome completo</label><input id="fNome" data-f="nome" value="${esc(F.nome)}" class="${F.ilegiveis.includes("nome")&&!F.tocados.nome?"flag":""}" autocomplete="off"></div>
+        <div><label class="lbl" for="fCpf">CPF</label><input id="fCpf" data-f="cpf" inputmode="numeric" value="${esc(F.cpf)}" class="${F.ilegiveis.includes("cpf")&&!F.tocados.cpf?"flag":""}"></div>
+        <div><label class="lbl" for="fCargo">Função</label><input id="fCargo" data-f="cargo" value="${esc(F.cargo)}" list="cargos"><datalist id="cargos"><option>ASG</option><option>Auxiliar de Cozinha</option><option>Cumim</option><option>Garçom</option><option>Bartender</option><option>Recepção</option><option>Auxiliar de Confeitaria</option></datalist></div>
+        ${t?`<div><label class="lbl" for="fIni">Primeiro dia</label><input id="fIni" type="date" data-f="dataInicio" value="${F.dataInicio}" max="${isoHoje()}"></div>
+             <div><label class="lbl" for="fFim">Último dia</label><input id="fFim" type="date" data-f="dataFim" value="${F.dataFim}" max="${isoHoje()}"></div>
+             <div><label class="lbl" for="fValor">Valor do teste (R$)</label><input id="fValor" data-f="valor" inputmode="decimal" value="${esc(F.valor)}"></div>
+             <div><label class="lbl" for="fVt">Vale-transporte (R$)</label><input id="fVt" data-f="vt" inputmode="decimal" value="${esc(F.vt)}"></div>`
+          :`<div><label class="lbl" for="fIni">Data do serviço</label><input id="fIni" type="date" data-f="dataInicio" value="${F.dataInicio}" max="${isoHoje()}"></div>
+             <div><label class="lbl" for="fHoras">Jornada</label><select id="fHoras" data-f="horas"><option value="">Escolha</option>${Object.keys(jt).map(h=>`<option value="${h}" ${String(F.horas)===h?"selected":""}>${h} horas · ${brl(jt[h])}</option>`).join("")}</select></div>
+             <div><label class="lbl" for="fValor">Valor (R$)</label><input id="fValor" data-f="valor" inputmode="decimal" value="${esc(F.valor)}"></div>`}
+        <div><label class="lbl" for="fForma">Tipo da chave PIX</label><select id="fForma" data-f="forma"><option value="">Escolha</option>${Object.values(FORMAS).map(f=>`<option ${F.forma===f?"selected":""}>${f}</option>`).join("")}</select></div>
+        <div class="${t?"":"full"}"><label class="lbl" for="fChave">Chave PIX</label><input id="fChave" data-f="chave" value="${esc(F.chave)}" class="${(F.ilegiveis.includes("chave")&&!F.tocados.chave)||(!F.chave&&F.fotos.length)?"flag":""}" autocomplete="off"></div>
+        <div class="full"><label class="lbl" for="fJust">Justificativa (só se o valor for diferente da tabela ou passar do limite de dias)</label><textarea id="fJust" data-f="justificativa">${esc(F.justificativa)}</textarea></div>
+      </div>
+    </div>
+    <aside class="side-panel card">
+      <div class="eyebrow">Conferência</div>
+      <div id="alertBox"></div>
+      <div class="row" style="justify-content:space-between"><span class="muted">Valor</span><span class="val" id="fTotal"></span></div>
+      <button type="button" class="primary" id="btnEnviar">Enviar para o RH</button>
+      <button type="button" id="btnLimpar">Limpar</button>
+    </aside></div>`;
+  atualizarAlertas();
+}
+function dropHtml(i){const f=F.fotos[i];const lab=i===0?"Página 1 · dados pessoais":"Página 2 · valor e chave PIX";
+  return f?`<div class="drop has card" data-drop="${i}"><img src="${f.url}" alt="${lab}" data-lbsrc="${f.url}"><button type="button" class="small x" data-rmfoto="${i}">Trocar</button></div>`
+          :`<div class="drop" data-drop="${i}" role="button" tabindex="0"><b>${lab}</b><small>Arraste a foto aqui ou toque para escolher/tirar foto</small></div>`}
+async function addFoto(file,idx){
+  if(!file||!file.type.startsWith("image/")){toast("Envie uma imagem (foto do termo).");return}
+  busy(true,"Preparando foto…");try{const f=await comprimir(file);if(!(idx>=0)||idx>=F.fotos.length)F.fotos.push(f);else F.fotos[idx]=f}finally{busy(false)}viewNovo();
+}
+async function checarSemana(){
+  if(isTeste(F)||!cpfOk(F.cpf)||!F.dataInicio){F.extra=null;return}
+  const r=await api("diasSemana",{cpf:F.cpf,datas:datasDe(F)});if(r.ok)F.extra=r.dias;atualizarAlertas();
+}
+function lancDoForm(){const l={...F};if(!isTeste(l)){l.dataFim=l.dataInicio}l.dias=datasDe(l).length;return l}
+function atualizarAlertas(){
+  const l=lancDoForm(),A=alertasDe(l,{extra:F.extra,ilegiveis:F.ilegiveis,tocados:F.tocados,fotos:F.fotos.length});
+  $("#alertBox").innerHTML=alertHtml(A);
+  const tot=num(l.valor)+(isTeste(l)?num(l.vt):0);$("#fTotal").textContent=brl(tot)+(isTeste(l)&&num(l.vt)?" (com VT)":"");
+  $("#btnEnviar").disabled=A.some(a=>a[0]==="crit");
+}
+async function lerTermo(){
+  busy(true,"Lendo o termo…");
+  try{const r=await api("lerTermo",{imagens:F.fotos.map(f=>({mime:f.mime,data:f.data})),plano:F.plano});
+    if(!r.ok){toast(r.msg);return}
+    const d=r.dados||{};
+    if(d.plano)F.plano=/teste/i.test(d.plano)?"Teste de funcionário":"Freelancer";
+    ["nome","cpf","cargo","dataInicio","dataFim","valor","vt","chave"].forEach(k=>{if(d[k]!=null&&d[k]!=="")F[k]=k==="nome"?String(d[k]).toUpperCase():String(d[k])});
+    if(d.horas)F.horas=String(d.horas);
+    if(d.cpf)F.cpf=fmtCpf(d.cpf);
+    if(F.chave){const t=tipoChave(F.chave);if(t){F.forma=FORMAS[t];F.chave=fmtChave(F.chave,t)}}
+    if(!F.chave&&/aleat/i.test(d.tipoChaveEscrito||""))F.forma=FORMAS.ALEATORIA;
+    F.ilegiveis=Array.isArray(d.ilegivel)?d.ilegivel:[];F.tocados={};F.obsIA=Array.isArray(d.observacoes)?d.observacoes:[];
+    toast("Leitura concluída. Confira os campos marcados.");
+  }catch(e){toast("Não consegui ler: "+e.message)}finally{busy(false)}
+  viewNovo();checarSemana();
+}
+async function enviar(){
+  const l=lancDoForm();
+  if(alertasDe(l,{extra:F.extra,fotos:F.fotos.length}).some(a=>a[0]==="crit")){toast("Resolva os alertas em vermelho.");return}
+  busy(true,"Enviando…");
+  try{
+    const lanc={unidade:F.unidade,plano:l.plano,nome:l.nome.trim().toUpperCase(),cpf:fmtCpf(l.cpf),cargo:l.cargo,dataInicio:l.dataInicio,dataFim:l.dataFim,dias:l.dias,horas:isTeste(l)?"":l.horas,
+      valor:num(l.valor),vt:isTeste(l)?num(l.vt):"",forma:l.forma||FORMAS[tipoChave(l.chave)]||"",chave:fmtChave(l.chave,tipoChave(l.chave)),justificativa:l.justificativa,
+      alertas:alertasDe(l,{extra:F.extra}).filter(a=>a[0]!=="info").map(a=>a[1]).join(" | ")};
+    const r=await api("salvar",{lanc,fotos:F.fotos.map(f=>({mime:f.mime,data:f.data}))});
+    if(!r.ok){toast(r.msg);return}
+    toast("Enviado para o RH.");F=null;await carregar();
+  }catch(e){toast("Falha ao enviar: "+e.message)}finally{busy(false)}
+}
+
+/* ======================= HISTÓRICO (GERENTE) ======================= */
+const statusTxt=o=>o.status==="ENVIADO"?"Aguardando RH":o.status==="PROGRAMADO"?`Pagamento em ${br(o.vencimento)}`:o.status==="PAGO"?`Pago em ${br(o.vencimento)}`:o.status==="DEVOLVIDO"?"Devolvido":o.status;
+const servTxt=o=>isTeste(o)?(o.dataFim&&o.dataFim!==o.dataInicio?`${br(o.dataInicio)} a ${br(o.dataFim)}`:br(o.dataInicio)):`${br(o.dataInicio)}${o.horas?` · ${o.horas}h`:""}`;
+const valorTot=(o,vt=true)=>num(o.valor)+(isTeste(o)&&vt?num(o.vt):0);
+function viewHistorico(){
+  const it=[...S.itens].sort((a,b)=>String(b.criadoEm).localeCompare(String(a.criadoEm)));
+  const prog=[...new Set(it.filter(o=>o.vencimento&&["PROGRAMADO","PAGO"].includes(o.status)).map(o=>o.vencimento))].sort().reverse();
+  const dev=it.filter(o=>o.status==="DEVOLVIDO");
+  $("#view").innerHTML=`<div style="display:flex;flex-direction:column;gap:18px">
+    ${dev.length?`<div class="card" style="padding:14px 16px"><h3 style="color:var(--crit)">Devolvidos pelo RH</h3><ul class="alerts" style="margin-top:8px">${dev.map(o=>`<li class="crit"><span><b>${esc(o.nome)}</b> (${servTxt(o)}): ${esc(o.obsRH||"sem motivo informado")}. Envie de novo corrigido.</span></li>`).join("")}</ul></div>`:""}
+    <div class="card" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px"><h3>Pagamentos programados</h3>
+      ${prog.length?prog.map(v=>{const g=it.filter(o=>o.vencimento===v&&["PROGRAMADO","PAGO"].includes(o.status));const pago=g.every(o=>o.status==="PAGO");
+        return `<details ${v===prog[0]?"open":""}><summary><b>${pago?"Pago":"Pagamento"} em ${br(v)}</b> · ${g.length} lançamento${g.length>1?"s":""} · <span class="mono">${brl(g.reduce((s,o)=>s+valorTot(o),0))}</span></summary>
+          <div class="tbl" style="margin-top:8px"><table><thead><tr><th>Nome</th><th>Tipo</th><th>Serviço</th><th>Valor</th></tr></thead><tbody>${g.map(o=>`<tr><td>${esc(o.nome)}</td><td>${isTeste(o)?"Teste":"Freelancer"}</td><td class="mono">${servTxt(o)}</td><td class="mono">${brl(valorTot(o))}</td></tr>`).join("")}</tbody></table></div></details>`}).join(""):`<div class="empty">Nenhum pagamento programado ainda.</div>`}
+    </div>
+    <div class="card" style="padding:14px 16px"><h3 style="margin-bottom:8px">Tudo o que você enviou</h3>
+      ${it.length?`<div class="tbl"><table><thead><tr><th>Enviado em</th><th>Nome</th><th>Tipo</th><th>Serviço</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody>
+      ${it.map(o=>`<tr><td class="mono">${br(o.criadoEm)}</td><td>${esc(o.nome)}</td><td>${isTeste(o)?"Teste":"Freelancer"}</td><td class="mono">${servTxt(o)}</td><td class="mono">${brl(valorTot(o))}</td><td><span class="st st-${o.status}">${statusTxt(o)}</span></td><td>${o.status==="ENVIADO"&&o.criadoPor===S.user.usuario?`<button type="button" class="small danger" data-excluir="${o.id}">Excluir</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">Você ainda não enviou nenhum termo.</div>`}
+    </div></div>`;
+}
+
+/* ======================= RH: A PROGRAMAR ======================= */
+let SEL=new Set();
+function cardLanc(o,{sel=false,editavel=true}={}){
+  const A=alertasDe(o).filter(a=>!/Escreva o motivo/.test(a[1])||!o.justificativa);
+  const f=(k,lab,v,o2={})=>`<div class="fld ${o2.full?"full":""}"><label class="lbl" for="e-${o.id}-${k}">${lab}</label><div class="in">${o2.area?`<textarea id="e-${o.id}-${k}" data-edit="${k}" data-id="${o.id}" ${editavel?"":"readonly"}>${esc(v)}</textarea>`:`<input id="e-${o.id}-${k}" data-edit="${k}" data-id="${o.id}" value="${esc(v)}" ${editavel&&!o2.ro?"":"readonly"}>`}</div></div>`;
+  const fotos=String(o.fotos||"").split(",").filter(Boolean);
+  return `<article class="card lanc sev-${sevDe(A)}"><div class="lanc-main">
+    <div class="head"><label class="row" style="gap:8px">${sel?`<input type="checkbox" data-sel="${o.id}" ${SEL.has(o.id)?"checked":""} style="width:18px;height:18px;accent-color:var(--accent)">`:""}<h3>${esc(o.nome)}</h3></label>
+      <div class="row"><span class="pill ${isTeste(o)?"teste":""}">${esc(o.plano)}</span><span class="val">${brl(valorTot(o))}</span></div></div>
+    <div class="muted" style="font-size:.82rem">Enviado por ${esc(o.criadoPor)} em ${br(o.criadoEm)} ${String(o.criadoEm).slice(11)}${o.justificativa?` · Justificativa: “${esc(o.justificativa)}”`:""}</div>
+    <div class="fields">
+      ${f("nome","Nome completo",o.nome)}${f("cpf","CPF",o.cpf)}
+      ${f("cargo","Função",o.cargo)}${f("dataInicio",isTeste(o)?"Primeiro dia (AAAA-MM-DD)":"Data do serviço (AAAA-MM-DD)",o.dataInicio)}
+      ${isTeste(o)?f("dataFim","Último dia (AAAA-MM-DD)",o.dataFim)+f("vt","VT (R$)",o.vt):f("horas","Horas",o.horas)}
+      ${f("valor","Valor (R$)",o.valor)}${f("forma","Forma de débito",o.forma)}${f("chave","Chave PIX",o.chave)}
+    </div>
+    ${alertHtml(A)}
+    ${editavel?`<div class="row"><input id="mot-${o.id}" placeholder="Motivo da devolução (ex.: falta assinatura)" class="grow" style="max-width:380px"><button type="button" class="small danger" data-devolver="${o.id}">Devolver ao gerente</button></div>`:""}
+  </div><aside class="lanc-side">${fotos.length?fotos.map((id,i)=>`<button type="button" class="thumb" data-foto="${id}" aria-label="Ampliar página ${i+1}">Pág. ${i+1}</button>`).join(""):`<span class="muted" style="font-size:.8rem">Sem foto</span>`}</aside></article>`;
+}
+function viewProgramar(){
+  const it=S.itens.filter(o=>o.unidade===S.unidade&&o.status==="ENVIADO").sort((a,b)=>String(a.dataInicio).localeCompare(String(b.dataInicio)));
+  SEL=new Set([...SEL].filter(id=>it.some(o=>o.id===id)));
+  $("#view").innerHTML=`<div style="display:flex;flex-direction:column;gap:14px">
+    <div class="card" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+      <div class="toolbar">
+        <div class="fld"><label class="lbl" for="pEmi">Data de emissão</label><input id="pEmi" type="date" value="${isoHoje()}"></div>
+        <div class="fld"><label class="lbl" for="pVen">Data de pagamento</label><input id="pVen" type="date" value="${isoHoje(1)}"></div>
+        <button type="button" id="btnSelTodos">${SEL.size===it.length&&it.length?"Desmarcar todos":"Marcar todos"}</button>
+        <button type="button" class="primary" id="btnProgramar" ${SEL.size?"":"disabled"}>Programar ${SEL.size||""} selecionado${SEL.size===1?"":"s"}</button>
+      </div>
+      <p class="muted" style="margin:0;font-size:.85rem">Conta financeira de ${esc(S.unidade)}: <b>${esc(S.config.contas[S.unidade]||"A DEFINIR")}</b>. Ao programar, o gerente passa a ver esses lançamentos com a data de pagamento.</p>
+    </div>
+    ${it.length?it.map(o=>cardLanc(o,{sel:true})).join(""):`<div class="empty">Nenhum termo novo de ${esc(S.unidade)} esperando programação.</div>`}
+  </div>`;
+  carregarThumbs();
+}
+
+/* ======================= RH: VENCIMENTOS ======================= */
+let VT_ON=store("pf-vt")!==false;
+function agrupar(itens){ // junta lançamentos da mesma pessoa no mesmo vencimento
+  const m={};itens.forEach(o=>{const k=digits(o.cpf)+"|"+o.plano;(m[k]=m[k]||[]).push(o)});
+  return Object.values(m).map(g=>{g.sort((a,b)=>String(a.dataInicio).localeCompare(String(b.dataInicio)));const o=g[0];
+    return{ids:g.map(x=>x.id),itens:g,nome:o.nome,cpf:o.cpf,plano:o.plano,forma:o.forma,chave:o.chave,conta:o.conta||S.config.contas[o.unidade],emissao:o.emissao,vencimento:o.vencimento,status:g.every(x=>x.status==="PAGO")?"PAGO":"PROGRAMADO",
+      valor:g.reduce((s,x)=>s+valorTot(x,VT_ON),0),historico:g.length===1&&g[0].historico?g[0].historico:histDe(g)}});
+}
+function histDe(g){
+  if(isTeste(g[0])){return g.map(o=>{const n=datasDe(o).length;const b=`Teste de funcionário (${o.cargo||"função"}) prestado ${n>1?`nos dias ${br(o.dataInicio)} a ${br(o.dataFim)}`:`no dia ${br(o.dataInicio)}`}, ${n} dia${n>1?"s":""}, valor ${brl(o.valor)}`;
+    return num(o.vt)&&VT_ON?`${b} + VT ${brl(o.vt)}, valor total ${brl(valorTot(o))}`:`${b}, valor total ${brl(o.valor)}`}).join("; ")}
+  if(g.length===1){const o=g[0];return`Freelancer (${o.cargo||"função"}) prestado no dia ${br(o.dataInicio)}, por ${o.horas||"?"} horas, valor total ${brl(o.valor)}`}
+  return`Freelancer (${g[0].cargo||"função"}) prestado nos dias ${g.map(o=>`${br(o.dataInicio)} por ${o.horas||"?"} horas (${brl(o.valor)})`).join(" e ")}, valor total ${brl(g.reduce((s,o)=>s+num(o.valor),0))}`;
+}
+function viewVencimentos(){
+  const it=S.itens.filter(o=>o.unidade===S.unidade&&["PROGRAMADO","PAGO"].includes(o.status));
+  const ds=[...new Set(it.map(o=>o.vencimento))].sort().reverse();
+  if(!ds.includes(S.venc))S.venc=ds[0];
+  if(!ds.length){$("#view").innerHTML=`<div class="empty">Nenhum pagamento programado para ${esc(S.unidade)}. Programe em “A programar”.</div>`;return}
+  const doV=it.filter(o=>o.vencimento===S.venc),G=agrupar(doV),tot=G.reduce((s,g)=>s+g.valor,0);
+  $("#view").innerHTML=`<div style="display:flex;flex-direction:column;gap:14px">
+    <nav class="tabs sub" aria-label="Vencimentos">${ds.map(d=>{const g=it.filter(o=>o.vencimento===d);return`<button type="button" data-venc="${d}" aria-selected="${d===S.venc}">${br(d)} <span class="count">· ${g.length} · ${brl(g.reduce((s,o)=>s+valorTot(o,VT_ON),0))}</span></button>`}).join("")}</nav>
+    <section class="summary"><div><span class="eyebrow">Lançamentos</span><b>${G.length}</b></div><div><span class="eyebrow">Total</span><b>${brl(tot)}</b></div><div><span class="eyebrow">Conta</span><b style="font-size:.95rem">${esc(S.config.contas[S.unidade]||"A DEFINIR")}</b></div><div><span class="eyebrow">Situação</span><b style="font-size:.95rem">${G.every(g=>g.status==="PAGO")?"Pago":"Programado"}</b></div></section>
+    <div class="card" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+      <div class="row" style="justify-content:space-between"><h3>Resumo para o grupo</h3><div class="row"><button type="button" class="primary small" id="btnCopyRecap">Copiar resumo</button><button type="button" class="small" id="btnRecapTxt">Baixar .txt</button></div></div>
+      <pre class="recap" id="recap">${esc(recap(G))}</pre></div>
+    <div class="toolbar"><button type="button" id="btnCopyAll">Copiar lançamentos</button><button type="button" id="btnTxt">Baixar lançamentos (.txt)</button><button type="button" id="btnCsv">Baixar planilha (.csv)</button><button type="button" id="btnZip">Baixar anexos (.zip)</button>
+      <button type="button" id="btnPago" ${G.every(g=>g.status==="PAGO")?"disabled":""}>Marcar como pago</button>
+      <label class="row muted" style="margin-left:auto;font-size:.88rem"><input type="checkbox" id="vtToggle" ${VT_ON?"checked":""} style="width:auto"> Somar VT no valor do teste</label></div>
+    ${G.map((g,i)=>cardVenc(g,i)).join("")}
+  </div>`;
+  carregarThumbs();
+}
+function cardVenc(g,i){
+  const f=(k,lab,v,full)=>`<div class="fld ${full?"full":""}"><label class="lbl" for="v${i}-${k}">${lab}</label><div class="in">${full?`<textarea id="v${i}-${k}" readonly>${esc(v)}</textarea>`:`<input id="v${i}-${k}" value="${esc(v)}" readonly>`}<button type="button" class="small" data-copy="v${i}-${k}">Copiar</button></div></div>`;
+  const fotos=g.itens.flatMap(o=>String(o.fotos||"").split(",").filter(Boolean));
+  const A=g.itens.flatMap(o=>alertasDe(o)).filter(a=>a[0]!=="info"&&/dias como freelancer|limite/.test(a[1]));
+  return`<article class="card lanc sev-${g.status==="PAGO"?"ok":sevDe(A)}"><div class="lanc-main">
+    <div class="head"><h3>${esc(g.nome)}</h3><div class="row"><span class="pill ${isTeste(g)?"teste":""}">${esc(g.plano)}</span><span class="st st-${g.status}">${g.status==="PAGO"?"Pago":"Programado"}</span><span class="val">${brl(g.valor)}</span></div></div>
+    <div class="fields">${f("nome","Nome completo",g.nome)}${f("plano","Plano de contas",g.plano.toUpperCase())}${f("emi","Data de emissão",br(g.emissao))}${f("ven","Data de vencimento",br(g.vencimento))}
+      ${f("forma","Forma de débito",g.forma)}${f("chave","Chave PIX",g.chave)}${f("conta","Conta financeira",g.conta)}${f("valor","Valor",brl(g.valor).replace("R$ ",""))}${f("hist","Histórico",g.historico,true)}</div>
+    ${A.length?alertHtml(A):""}
+    <div class="row"><button type="button" class="small" data-copyg="${i}">Copiar lançamento</button><button type="button" class="small" data-zipg="${i}">Baixar anexos (${fotos.length})</button>${g.status!=="PAGO"?`<button type="button" class="small danger" data-desprog="${g.ids.join(",")}">Tirar deste vencimento</button>`:""}</div>
+  </div><aside class="lanc-side">${fotos.map((id,k)=>`<button type="button" class="thumb" data-foto="${id}" aria-label="Ampliar foto ${k+1}">Foto ${k+1}</button>`).join("")}</aside></article>`;
+}
+function curto(g){return g.itens.map(o=>isTeste(o)?`Teste ${o.cargo||""} ${dm(o.dataInicio)}${o.dataFim&&o.dataFim!==o.dataInicio?" a "+dm(o.dataFim):""}${num(o.vt)&&VT_ON?" + VT":""}`:`Freelancer ${o.cargo||""} ${dm(o.dataInicio)} ${o.horas?o.horas+"h":""}`).join(" + ").replace(/\s+/g," ").trim()}
+function recap(G){
+  const tot=G.reduce((s,g)=>s+g.valor,0),fr=G.filter(g=>!isTeste(g)).length;
+  let t=`*LANÇAMENTOS FREELANCER / TESTE — ${S.unidade}*\nPagamento: ${br(S.venc)} · Conta ${S.config.contas[S.unidade]||"A DEFINIR"}\n\n`;
+  G.forEach((g,i)=>t+=`${i+1}. ${g.nome} — ${curto(g)} — ${brl(g.valor)}\n`);
+  t+=`\n*TOTAL: ${brl(tot)}* (${G.length} lançamentos: ${fr} freelancer, ${G.length-fr} teste)\n`;
+  const obs=[];G.forEach(g=>g.itens.forEach(o=>alertasDe(o).forEach(a=>{if(/O limite é/.test(a[1]))obs.push(`• ${g.nome}: ${a[1].replace(/ Escreva o motivo.*$/,"")}${o.justificativa?` Motivo: ${o.justificativa}`:""}`)})));
+  if(obs.length)t+=`\n*Observações*\n${[...new Set(obs)].join("\n")}\n`;
+  return t;
+}
+function txtLanc(g){return[`UNIDADE: ${S.unidade}`,`NOME: ${g.nome}`,`PLANO DE CONTAS: ${g.plano.toUpperCase()}`,`DATA DE EMISSÃO: ${br(g.emissao)}`,`DATA DE VENCIMENTO: ${br(g.vencimento)}`,`FORMA DE DÉBITO: ${g.forma}`,`CHAVE PIX: ${g.chave}`,`CONTA FINANCEIRA: ${g.conta}`,`VALOR: ${brl(g.valor)}`,`HISTÓRICO: ${g.historico}`].join("\n")}
+function gruposAtuais(){return agrupar(S.itens.filter(o=>o.unidade===S.unidade&&o.vencimento===S.venc&&["PROGRAMADO","PAGO"].includes(o.status)))}
+function txtTodos(G){return`LANÇAMENTOS FREELANCER / TESTE — ${S.unidade} — VENCIMENTO ${br(S.venc)}\n${"=".repeat(60)}\n\n`+G.map((g,i)=>`${i+1}. `+txtLanc(g)).join("\n\n"+"-".repeat(60)+"\n\n")+`\n\n${"=".repeat(60)}\nTOTAL: ${brl(G.reduce((s,g)=>s+g.valor,0))} (${G.length} lançamentos)\n`}
+function csv(G){const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;const r=[["Unidade","Nome","Plano de contas","Data emissão","Data vencimento","Forma de débito","Chave PIX","Conta financeira","Valor","Histórico","CPF"]];
+  G.forEach(g=>r.push([S.unidade,g.nome,g.plano,br(g.emissao),br(g.vencimento),g.forma,g.chave,g.conta,g.valor.toFixed(2).replace(".",","),g.historico,g.cpf]));return"﻿"+r.map(x=>x.map(q).join(";")).join("\r\n")}
+async function fotoData(id){if(S.fotos[id])return S.fotos[id];const r=await api("foto",{fileId:id});if(!r.ok)throw new Error(r.msg);S.fotos[id]=`data:${r.mime};base64,${r.data}`;return S.fotos[id]}
+async function zipGrupos(G){busy(true,"Montando o .zip…");try{const z=new JSZip();for(const g of G){const pasta=G.length>1?z.folder(g.nome):z;let k=1;for(const o of g.itens)for(const id of String(o.fotos||"").split(",").filter(Boolean)){const d=await fotoData(id);pasta.file(`${g.nome} - ${br(o.dataInicio).replace(/\//g,"-")} - foto ${k++}.jpg`,d.split(",")[1],{base64:true})}}
+  if(G.length>1){z.file("LANCAMENTOS.txt",txtTodos(G));z.file("RESUMO.txt",recap(G))}return await z.generateAsync({type:"blob"})}finally{busy(false)}}
+async function carregarThumbs(){for(const b of document.querySelectorAll(".thumb[data-foto]")){const id=b.dataset.foto;try{const d=await fotoData(id);if(b.isConnected)b.innerHTML=`<img src="${d}" alt="">`}catch(e){}}}
+
+/* ======================= RH: TODOS ======================= */
+function viewTodos(){
+  const it=S.itens.filter(o=>o.unidade===S.unidade).sort((a,b)=>String(b.criadoEm).localeCompare(String(a.criadoEm)));
+  $("#view").innerHTML=`<div class="card" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+    <div class="row"><input id="busca" placeholder="Buscar por nome ou CPF" class="grow" style="max-width:360px"><button type="button" class="small" id="btnBaseCsv">Baixar base completa (.csv)</button></div>
+    <div class="tbl"><table><thead><tr><th>Enviado</th><th>Nome</th><th>CPF</th><th>Tipo</th><th>Serviço</th><th>Valor</th><th>Situação</th></tr></thead><tbody id="tbTodos">
+    ${it.map(o=>`<tr data-busca="${esc((o.nome+" "+digits(o.cpf)).toLowerCase())}"><td class="mono">${br(o.criadoEm)}</td><td>${esc(o.nome)}</td><td class="mono">${esc(o.cpf)}</td><td>${isTeste(o)?"Teste":"Freelancer"}</td><td class="mono">${servTxt(o)}</td><td class="mono">${brl(valorTot(o))}</td><td><span class="st st-${o.status}">${statusTxt(o)}</span></td></tr>`).join("")}
+    </tbody></table></div></div>`;
+}
+
+/* ======================= EVENTOS ======================= */
+document.addEventListener("click",async ev=>{
+  const b=ev.target.closest("button,[data-drop],img[data-lbsrc]");if(!b)return;
+  const d=b.dataset;
+  try{
+  if(d.role){S.papelEscolhido=d.role;telaEntrada();$("#lgUser").focus();return}
+  if(b.id==="btnSair")return sair();
+  if(b.id==="btnReload")return carregar();
+  if(d.uni){S.unidade=d.uni;F=null;SEL.clear();return render()}
+  if(d.view){S.view=d.view;return render()}
+  if(d.lbsrc||d.foto){const src=d.lbsrc||await fotoData(d.foto);$("#lbImg").src=src;$("#lb").hidden=false;$("#lbClose").focus();return}
+  if(b.id==="lbClose"){$("#lb").hidden=true;return}
+  /* novo */
+  if(d.plano){F.plano=d.plano;viewNovo();checarSemana();return}
+  if(d.rmfoto!=null){F.fotos.splice(+d.rmfoto,1);viewNovo();return}
+  if(d.drop!=null&&!b.classList.contains("has")){const fi=$("#fileIn");fi.dataset.idx=d.drop;fi.click();return}
+  if(b.id==="btnMaisFoto"){const fi=$("#fileIn");fi.dataset.idx=99;fi.click();return}
+  if(b.id==="btnLer")return lerTermo();
+  if(b.id==="btnEnviar")return enviar();
+  if(b.id==="btnLimpar"){F=null;return viewNovo()}
+  /* gerente */
+  if(d.excluir){busy(true,"Excluindo…");await api("excluir",{id:d.excluir});busy(false);return carregar()}
+  /* rh programar */
+  if(b.id==="btnSelTodos"){const ids=S.itens.filter(o=>o.unidade===S.unidade&&o.status==="ENVIADO").map(o=>o.id);SEL=SEL.size===ids.length?new Set():new Set(ids);return viewProgramar()}
+  if(b.id==="btnProgramar"){const v=$("#pVen").value,e=$("#pEmi").value;if(!v){toast("Escolha a data de pagamento.");return}
+    busy(true,"Programando…");const r=await api("programar",{ids:[...SEL],emissao:e,vencimento:v});busy(false);if(!r.ok){toast(r.msg);return}
+    toast(`${SEL.size} lançamento(s) programado(s) para ${br(v)}.`);SEL.clear();S.view="vencimentos";S.venc=v;return carregar()}
+  if(d.devolver){const m=$("#mot-"+d.devolver).value.trim();if(!m){toast("Escreva o motivo da devolução.");$("#mot-"+d.devolver).focus();return}
+    busy(true,"Devolvendo…");await api("devolver",{id:d.devolver,motivo:m});busy(false);toast("Devolvido ao gerente.");return carregar()}
+  /* rh vencimentos */
+  if(d.venc){S.venc=d.venc;return viewVencimentos()}
+  if(d.copy){return copy($("#"+d.copy).value)}
+  const G=S.view==="vencimentos"?gruposAtuais():[];
+  const nm=s=>`${s} ${S.unidade} ${br(S.venc).replace(/\//g,"-")}`;
+  if(b.id==="btnCopyRecap")return copy(recap(G));
+  if(b.id==="btnRecapTxt")return baixar(nm("Resumo pagamento freelancer")+".txt",recap(G));
+  if(b.id==="btnCopyAll")return copy(txtTodos(G));
+  if(b.id==="btnTxt")return baixar(nm("Lancamentos freelancer")+".txt",txtTodos(G));
+  if(b.id==="btnCsv")return baixar(nm("Lancamentos freelancer")+".csv",csv(G),"text/csv;charset=utf-8");
+  if(b.id==="btnZip")return baixar(nm("Anexos freelancer")+".zip",await zipGrupos(G),"application/zip");
+  if(d.copyg)return copy(txtLanc(G[+d.copyg]));
+  if(d.zipg){const g=G[+d.zipg];return baixar(`${g.nome}.zip`,await zipGrupos([g]),"application/zip")}
+  if(b.id==="btnPago"){busy(true,"Salvando…");await api("marcarPago",{ids:G.flatMap(g=>g.ids)});busy(false);toast("Marcado como pago.");return carregar()}
+  if(d.desprog){busy(true,"Salvando…");const r=await api("voltarEnviado",{ids:d.desprog.split(",")});busy(false);if(!r.ok){toast(r.msg);return}toast("Voltou para “A programar”.");return carregar()}
+  if(b.id==="btnBaseCsv"){const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;const cols=["id","criadoEm","criadoPor","unidade","plano","nome","cpf","cargo","dataInicio","dataFim","dias","horas","valor","vt","forma","chave","status","emissao","vencimento","conta","justificativa","obsRH"];
+    return baixar(`Base freelancer ${S.unidade}.csv`,"﻿"+[cols.join(";")].concat(S.itens.filter(o=>o.unidade===S.unidade).map(o=>cols.map(c=>q(o[c])).join(";"))).join("\r\n"),"text/csv;charset=utf-8")}
+  }catch(err){busy(false);toast("Erro: "+err.message)}
+});
+document.addEventListener("submit",e=>{if(e.target.id==="loginForm")entrar(e)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#lb").hidden=true;if((e.key==="Enter"||e.key===" ")&&e.target.matches?.(".drop:not(.has)")){e.preventDefault();e.target.click()}});
+$("#lb").addEventListener("click",e=>{if(e.target.id==="lb")$("#lb").hidden=true});
+document.addEventListener("change",async e=>{
+  const t=e.target;
+  if(t.id==="fileIn"){const idx=+t.dataset.idx;for(const [k,file] of [...t.files].entries())await addFoto(file,idx===99?99:idx+k);t.value="";return}
+  if(t.id==="vtToggle"){VT_ON=t.checked;store("pf-vt",VT_ON);return viewVencimentos()}
+  if(t.dataset.sel){t.checked?SEL.add(t.dataset.sel):SEL.delete(t.dataset.sel);return viewProgramar()}
+  if(t.dataset.edit){const id=t.dataset.id,k=t.dataset.edit,v=t.value;const o=S.itens.find(x=>x.id===id);if(o)o[k]=k==="nome"?v.toUpperCase():v;
+    api("editar",{id,campos:{[k]:o?o[k]:v}}).then(r=>{if(!r.ok)toast(r.msg)});S.semanas=mapaSemanas(S.itens);return viewProgramar()}
+  if(t.dataset.f){const k=t.dataset.f;F[k]=t.value;F.tocados[k]=true;
+    if(k==="cpf"&&cpfOk(t.value)){F.cpf=fmtCpf(t.value);t.value=F.cpf}
+    if(k==="chave"){const tp=tipoChave(t.value);if(tp){F.chave=fmtChave(t.value,tp);t.value=F.chave;if(!F.forma)F.forma=FORMAS[tp];$("#fForma").value=F.forma}}
+    if(k==="horas"&&S.config.jornadas[t.value]){F.valor=String(S.config.jornadas[t.value]);$("#fValor").value=F.valor}
+    if(["cpf","dataInicio","dataFim"].includes(k))checarSemana();
+    t.classList.remove("flag");atualizarAlertas()}
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.dataset.f){F[t.dataset.f]=t.value;F.tocados[t.dataset.f]=true;atualizarAlertas()}
+  if(t.id==="busca"){const q=t.value.toLowerCase().trim(),qd=digits(q);document.querySelectorAll("#tbTodos tr").forEach(r=>r.hidden=!!q&&!r.dataset.busca.includes(qd&&qd.length>2?qd:q))}});
+["dragover","dragenter"].forEach(n=>document.addEventListener(n,e=>{const d=e.target.closest?.(".drop");if(d){e.preventDefault();d.classList.add("over")}}));
+["dragleave","drop"].forEach(n=>document.addEventListener(n,e=>{const d=e.target.closest?.(".drop");if(d)d.classList.remove("over")}));
+document.addEventListener("drop",async e=>{const d=e.target.closest?.(".drop");if(!d)return;e.preventDefault();const files=[...e.dataTransfer.files];let i=+d.dataset.drop;for(const f of files)await addFoto(f,i++)});
+document.addEventListener("dragover",e=>{if(S.view==="novo")e.preventDefault()});
+document.addEventListener("drop",e=>{if(S.view==="novo"&&!e.target.closest?.(".drop")){e.preventDefault();[...e.dataTransfer.files].forEach(f=>addFoto(f,99))}});
+
+/* ======================= INÍCIO ======================= */
+(function(){const s=store("pf-sess");if(s&&s.token&&Date.now()-s.t<11*3600e3){Object.assign(S,{token:s.token,user:s.user,config:s.config});S.view=s.user.papel==="rh"?"programar":"novo";S.unidade=s.user.papel==="rh"?"BEIRA LAGO":s.user.unidade;carregar()}else telaEntrada()})();
+</script>
+</body>
+</html>
