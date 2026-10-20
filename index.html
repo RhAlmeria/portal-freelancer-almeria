@@ -340,7 +340,7 @@ function viewNovo(){
         <div class="row" style="margin-top:8px"><button type="button" class="small" id="btnMaisFoto">+ outra página</button>
         ${F.fotos.length>2?`<span class="muted" style="font-size:.85rem">${F.fotos.length} fotos anexadas</span>`:""}</div>
       </div>
-      ${S.config.ia?`<div class="row"><button type="button" class="primary" id="btnLer" ${F.fotos.length?"":"disabled"}>Ler termo pela foto</button><span class="muted" style="font-size:.85rem">Preenche os campos sozinho. Confira tudo antes de enviar.</span></div>`:`<p class="muted" style="margin:0;font-size:.85rem">Preencha os campos olhando a foto.</p>`}
+      ${S.config.ia?`<div class="row"><button type="button" class="primary" id="btnLer" ${F.fotos.length?"":"disabled"}>Ler termo pela foto</button><span class="muted" style="font-size:.85rem">A leitura roda sozinha quando as 2 fotos entram. Confira os campos marcados em vermelho antes de enviar.</span></div>`:`<p class="muted" style="margin:0;font-size:.85rem">Preencha os campos olhando a foto.</p>`}
       ${F.obsIA.length?`<ul class="alerts">${F.obsIA.map(o=>`<li class="info"><span>Leitura: ${esc(o)}</span></li>`).join("")}</ul>`:""}
       <div class="grid2">
         <div class="full"><label class="lbl" for="fNome">Nome completo</label><input id="fNome" data-f="nome" value="${esc(F.nome)}" class="${F.ilegiveis.includes("nome")&&!F.tocados.nome?"flag":""}" autocomplete="off"></div>
@@ -373,6 +373,7 @@ function dropHtml(i){const f=F.fotos[i];const lab=i===0?"Página 1 · dados pess
 async function addFoto(file,idx){
   if(!file||!file.type.startsWith("image/")){toast("Envie uma imagem (foto do termo).");return}
   busy(true,"Preparando foto…");try{const f=await comprimir(file);if(!(idx>=0)||idx>=F.fotos.length)F.fotos.push(f);else F.fotos[idx]=f}finally{busy(false)}viewNovo();
+  if(S.config.ia&&F.fotos.length>=2&&!F.lido){F.lido=true;lerTermo()}
 }
 async function checarSemana(){
   if(isTeste(F)||!cpfOk(F.cpf)||!F.dataInicio){F.extra=null;return}
@@ -563,7 +564,7 @@ document.addEventListener("click",async ev=>{
   if(b.id==="lbClose"){$("#lb").hidden=true;return}
   /* novo */
   if(d.plano){F.plano=d.plano;viewNovo();checarSemana();return}
-  if(d.rmfoto!=null){F.fotos.splice(+d.rmfoto,1);viewNovo();return}
+  if(d.rmfoto!=null){F.fotos.splice(+d.rmfoto,1);F.lido=false;viewNovo();return}
   if(d.drop!=null&&!b.classList.contains("has")){const fi=$("#fileIn");fi.dataset.idx=d.drop;fi.click();return}
   if(b.id==="btnMaisFoto"){const fi=$("#fileIn");fi.dataset.idx=99;fi.click();return}
   if(b.id==="btnLer")return lerTermo();
